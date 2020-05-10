@@ -12,7 +12,6 @@ from astropy.io import ascii
 import astropy.io.fits as fits
 from astropy.table import Table
 from scipy.interpolate import interpolate
-import polTools
 import os
 import glob
 
@@ -102,7 +101,7 @@ final_result = Table(names=("Date", "BQ", "BU", "BQerr", "BUerr", "VQ", "VU", "V
 
 for folder in folderList:
 
-    date = int(folder[-8:])
+    date = folder[-8:]
     
     stokes, stokesError, stokesCovar, waves, ok, bpm = fileLoad(folder)
 
@@ -157,7 +156,7 @@ for folder in folderList:
         for column, i in errcols:
             
             #load appropriate column
-            pol = stokesError[i,:]
+            pol = np.sqrt(stokesError[i,ok[0]])/stokes[0,ok[0]]
             
             #integrate and convolve
             top = np.trapz((flux[filterregion]*weightpol[filterregion]*pol[filterregion]), x=lam[filterregion])
